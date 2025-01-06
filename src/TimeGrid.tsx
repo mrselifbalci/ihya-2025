@@ -47,12 +47,6 @@ const TimeGrid: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleNameChange = (index: number, newName: string) => {
-    const updatedData = [...data];
-    updatedData[index].names = newName.split(",");
-    setData(updatedData);
-  };
-
   const getTileColor = (hour: number): string => {
     const adjustedHour = hour === 24 ? 0 : hour; // Handle 24:00 as 0 (midnight)
     if (adjustedHour < currentHour) return "#F5A3A3";
