@@ -26,10 +26,19 @@ const TimeAndDate: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ fontFamily: "Arial", fontSize: "24px", textAlign: "center" }}>
+    <div
+      style={{
+        fontFamily: "Arial",
+        fontSize: "24px",
+        display: "flex",
+        justifyContent: "space-between",
+        paddingLeft: "50px",
+        paddingRight: "50px",
+      }}
+    >
       <div>
-        <h1>Türkiye Saati</h1>
-        <div>{currentTime}</div>
+        <h2>Türkiye Saati</h2>
+        <h3 style={{ marginLeft: "20px" }}>{currentTime}</h3>
       </div>
       <div>
         <h2>Hicri Takvim Tarihi</h2>
