@@ -1,53 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import Grid from "@mui/material/Grid";
-import { Box } from "@mui/material";
+import { Box, Checkbox } from "@mui/material";
 
-type HourData = {
-  time: string;
-  names: string[];
+type NameStatus = {
+  name: string;
+  status: boolean;
 };
 
-const data: HourData[] = [
-  { time: "00:00", names: ["Elif", "R.Yasar"] },
-  { time: "1:00", names: ["NURAY"] },
-  { time: "2:00", names: ["Safiye Erbey"] },
-  { time: "3:00", names: ["ŞENGÜL"] },
-  { time: "4:00", names: ["ŞENGÜL"] },
-  { time: "5:00", names: ["inci"] },
-  { time: "6:00", names: ["inci", "Meral"] },
-  { time: "7:00", names: ["inci", "AAyse"] },
-  { time: "8:00", names: ["Mine", "E.Mazma"] },
-  { time: "9:00", names: ["Htc Dem"] },
-  { time: "10:00", names: ["E Aytan"] },
-  { time: "11:00", names: ["Hayriye"] },
-  { time: "12:00", names: ["Mrym Glsm Esm"] },
-  { time: "13:00", names: ["aysegulg"] },
-  { time: "14:00", names: ["F.Kaplan"] },
-  { time: "15:00", names: ["Orby"] },
-  { time: "16:00", names: ["Habibe"] },
-  { time: "17:00", names: ["Faimana"] },
-  { time: "18:00", names: ["Buket"] },
-  { time: "19:00", names: ["H.Kara"] },
-  { time: "20:00", names: ["E.üçok"] },
-  { time: "21:00", names: ["Bahar", "Vuslat"] },
-  { time: "22:00", names: ["Hale"] },
-  { time: "23:00", names: ["AyselA.Çevik"] },
-];
+type HourData = {
+  hour: string; // Example: "00:00"
+  names: NameStatus[]; // Array of names with their status
+};
 
 const TimeGrid: React.FC = () => {
+  const [data, setData] = useState<HourData[]>([]); // State to hold grid data
   const [currentHour, setCurrentHour] = useState<number>(
     DateTime.now().setZone("Asia/Istanbul").hour
   );
 
+  // Fetch data from backend
   useEffect(() => {
+    const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5001/date/${today}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const result = await response.json();
+        setData(result.data); // Update the state with fetched data
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+
+    // Update the current hour every minute
     const interval = setInterval(() => {
       setCurrentHour(DateTime.now().setZone("Asia/Istanbul").hour);
-    }, 60000); // Update every minute
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
+  // Determine tile color
   const getTileColor = (hour: number): string => {
     if (hour < currentHour) return "#F5A3A3"; // Red for past hours
     if (hour === currentHour) return "#FFB347"; // Orange for the current hour
@@ -56,10 +55,11 @@ const TimeGrid: React.FC = () => {
 
   return (
     <Grid container spacing={2} style={{ padding: "20px" }}>
-      {data.map((hourData, index) => {
-        const hour = parseInt(hourData.time.split(":")[0], 10);
+      {data?.map((hourData, index) => {
+        const hour = parseInt(hourData.hour.split(":")[0], 10);
         const color = getTileColor(hour);
-        const isCurrentHour = (hour === 24 ? 0 : hour) === currentHour;
+        const isCurrentHour = hour === currentHour;
+        const isPastHour = hour < currentHour;
 
         return (
           <Grid
@@ -83,25 +83,33 @@ const TimeGrid: React.FC = () => {
                 alignItems: "center", // Center horizontally
               }}
             >
-              <strong>🤲🏻 Saat {hourData.time}</strong>
+              <strong>🤲🏻 Saat {hourData.hour}</strong>
               <Grid container spacing={1} style={{ marginTop: "10px" }}>
-                {hourData.names.map((name, i) => (
+                {hourData.names.map((nameStatus, i) => (
                   <Grid item xs={12} key={i}>
-                    {isCurrentHour ? (
-                      <Box sx={{display:'flex',alignItems:'center'}}>
-                        <span>{name}</span>
-                        <input
-                          type="checkbox"
-                          style={{
+                    {isCurrentHour || isPastHour ? (
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <span style={{ minWidth: "20%" }}>
+                          {nameStatus.name}
+                        </span>
+                        <Checkbox
+                          checked={nameStatus.status}
+                          disabled={isPastHour} // Disable for past hours
+                          sx={{
                             marginLeft: "10px",
-                            width: "20px",
-                            height: "20px",
-                            cursor: "pointer",
+                            "&.Mui-checked": {
+                              color: "primary.main", // Material-UI blue
+                            },
+                          }}
+                          onChange={(e) => {
+                            console.log(
+                              `${nameStatus.name} checked: ${e.target.checked}`
+                            );
                           }}
                         />
                       </Box>
                     ) : (
-                      <span>{name}</span> // Non-editable for past and future hours
+                      <span>{nameStatus.name}</span> // Display names without checkboxes for future hours
                     )}
                   </Grid>
                 ))}
