@@ -6,7 +6,7 @@ type HourData = {
   names: string[];
 };
 
-const initialData: HourData[] = [
+const data: HourData[] = [
   { time: "1:00", names: ["NURAY"] },
   { time: "2:00", names: ["Safiye Erbey"] },
   { time: "3:00", names: ["ŞENGÜL"] },
@@ -34,7 +34,6 @@ const initialData: HourData[] = [
 ];
 
 const TimeGrid: React.FC = () => {
-  const [data, setData] = useState<HourData[]>(initialData);
   const [currentHour, setCurrentHour] = useState<number>(
     DateTime.now().setZone("Asia/Istanbul").hour
   );
