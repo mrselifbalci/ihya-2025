@@ -79,31 +79,23 @@ const TimeGrid: React.FC = () => {
           >
             <strong>🤲🏻 Saat {hourData.time}</strong>
             <ul style={{ listStyle: "none", padding: 0, margin: "10px 0" }}>
-              {hourData.names.map((name, i) => (
-                <li key={i} style={{ marginBottom: "5px" }}>
-                  {isCurrentHour ? (
-                    <>
-                      <input
-                        type="checkbox"
-                        style={{ marginRight: "5px" }}
-                      />
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => {
-                          const updatedNames = [...hourData.names];
-                          updatedNames[i] = e.target.value;
-                          handleNameChange(index, updatedNames.join(","));
-                        }}
-                        style={{ width: "80%" }}
-                      />
-                    </>
-                  ) : (
-                    <span>{name}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+  {hourData.names.map((name, i) => (
+    <li key={i} style={{ marginBottom: "5px" }}>
+      {isCurrentHour ? (
+        <>
+          <span>{name}</span>
+          <input
+            type="checkbox"
+            style={{ marginLeft: "10px" }}
+          />
+        </>
+      ) : (
+        <span>{name}</span> // Non-editable for past and future hours
+      )}
+    </li>
+  ))}
+</ul>
+
           </div>
         );
       })}

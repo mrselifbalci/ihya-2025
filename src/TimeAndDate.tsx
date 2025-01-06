@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import moment from 'moment-hijri';
-import 'moment/locale/tr'; // Import Turkish locale for moment
+moment.locale('tr'); 
 
 const TimeAndDate: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<string>('');
