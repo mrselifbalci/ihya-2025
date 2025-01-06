@@ -64,7 +64,7 @@ const TimeGrid: React.FC = () => {
       return (
         <Grid
           item
-          xs={12} // Full-width on mobile
+          xs={6} // Full-width on mobile
           sm={6} // Two columns on tablets
           md={4} // Three columns on desktops
           key={index}
