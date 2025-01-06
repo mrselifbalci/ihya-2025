@@ -10,19 +10,32 @@ const TimeAndDate: React.FC = () => {
     // Set moment-hijri locale to Turkish
     moment.locale("en");
 
+    // Calculate time until the next hour
+    const now = DateTime.now().setZone("Asia/Istanbul");
+    const nextHour = now.plus({ hours: 1 }).startOf("hour");
+    const timeUntilNextHour = nextHour.diff(now).as("milliseconds");
+
+    // Set a timeout to refresh the page at the start of the next hour
+    const timeout = setTimeout(() => {
+      window.location.reload(); // Refresh the page
+    }, timeUntilNextHour);
+
+    // Regular time and date updates every second
     const interval = setInterval(() => {
-      // Get current time in Turkey (UTC+3)
       const timeInTurkey = DateTime.now()
         .setZone("Asia/Istanbul")
         .toFormat("HH:mm:ss");
       setCurrentTime(timeInTurkey);
 
-      // Get Islamic lunar date with month name in Turkish
       const lunarDate = moment().format("iD iMMMM iYYYY");
       setIslamicDate(lunarDate);
     }, 1000);
 
-    return () => clearInterval(interval);
+    // Cleanup interval and timeout
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   }, []);
 
   return (
