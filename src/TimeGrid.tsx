@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
+import Grid from '@mui/material/Grid';
 
 type HourData = {
   time: string;
@@ -54,46 +55,57 @@ const TimeGrid: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
-      {data.map((hourData, index) => {
-        const hour = parseInt(hourData.time.split(":")[0], 10);
-        const color = getTileColor(hour);
-        const isCurrentHour = (hour === 24 ? 0 : hour) === currentHour;
+    <Grid container spacing={2} style={{ padding: "20px" }}>
+    {data.map((hourData, index) => {
+      const hour = parseInt(hourData.time.split(":")[0], 10);
+      const color = getTileColor(hour);
+      const isCurrentHour = (hour === 24 ? 0 : hour) === currentHour;
 
-        return (
+      return (
+        <Grid
+          item
+          xs={12} // Full-width on mobile
+          sm={6} // Two columns on tablets
+          md={4} // Three columns on desktops
+          key={index}
+        >
           <div
-            key={index}
             style={{
               backgroundColor: color,
               padding: "10px",
-              borderRadius: "5px",
+              borderRadius: "8px",
               color: "white",
+              textAlign: "center",
             }}
           >
             <strong>🤲🏻 Saat {hourData.time}</strong>
-            <ul style={{ listStyle: "none", padding: 0, margin: "10px 0" }}>
-  {hourData.names.map((name, i) => (
-    <li key={i} style={{ marginBottom: "5px" }}>
-      {isCurrentHour ? (
-        <>
-          <span>{name}</span>
-          <input
-            type="checkbox"
-            style={{ marginLeft: "10px" }}
-          />
-        </>
-      ) : (
-        <span>{name}</span> // Non-editable for past and future hours
-      )}
-    </li>
-  ))}
-</ul>
-
+            <Grid container spacing={1} style={{ marginTop: "10px" }}>
+              {hourData.names.map((name, i) => (
+                <Grid item xs={12} key={i}>
+                  {isCurrentHour ? (
+                    <>
+                      <span>{name}</span>
+                      <input
+                        type="checkbox"
+                        style={{
+                          marginLeft: "10px",
+                          width: "20px",
+                          height: "20px",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <span>{name}</span> // Non-editable for past and future hours
+                  )}
+                </Grid>
+              ))}
+            </Grid>
           </div>
-        );
-      })}
-    </div>
-  );
+        </Grid>
+      );
+    })}
+  </Grid>)
 };
 
 export default TimeGrid;
