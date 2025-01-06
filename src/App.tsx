@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <TimeAndDate />
-      <Typography variant="h6" sx={{ px: 20 }}>
+      <Typography variant="h6">
         İtikafa başladığınız saatte isminizin yanındaki kutuya tik atmayı
         unutmayınız. Kutucuklar sadece kendi saatlerinde aktif olacaktır.
         Önceden ya da saat geçtikten sonra değişiklik yapılmamaktadır. Eskiye
