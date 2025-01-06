@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import Grid from "@mui/material/Grid";
+import { Box } from "@mui/material";
 
 type HourData = {
   time: string;
@@ -87,7 +88,7 @@ const TimeGrid: React.FC = () => {
                 {hourData.names.map((name, i) => (
                   <Grid item xs={12} key={i}>
                     {isCurrentHour ? (
-                      <>
+                      <Box sx={{display:'flex',alignItems:'center'}}>
                         <span>{name}</span>
                         <input
                           type="checkbox"
@@ -98,7 +99,7 @@ const TimeGrid: React.FC = () => {
                             cursor: "pointer",
                           }}
                         />
-                      </>
+                      </Box>
                     ) : (
                       <span>{name}</span> // Non-editable for past and future hours
                     )}
