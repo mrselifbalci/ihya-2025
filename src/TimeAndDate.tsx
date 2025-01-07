@@ -65,11 +65,11 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
       </Box>
       <Box sx={{ mt: 2 }}>
         <Typography variant="h6">Hicri Tarih</Typography>
-        <Typography variant="h5">{islamicDate}</Typography>
+        <Typography variant="h5">8 Rajab</Typography>
       </Box>
       <Box sx={{ mt: 2 }}>
         <Typography variant="body1">Tarihi değiştir:</Typography>
-        <Select
+        {/* <Select
           value={selectedDay}
           onChange={handleDateChange}
           sx={{
@@ -114,7 +114,7 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
               {day}
             </MenuItem>
           ))}
-        </Select>
+        </Select> */}
       </Box>
     </Box>
   );
