@@ -38,7 +38,7 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
 
     return () => clearInterval(interval);
   }, [selectedDay, onDateChange]);
-  console.log(setSelectedDay);
+
   return (
     <Box
       sx={{
