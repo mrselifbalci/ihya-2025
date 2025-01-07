@@ -8,7 +8,7 @@ function App() {
     <>
       <TimeAndDate />
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
           <Box
             sx={{
               background: "#E57373",
@@ -20,7 +20,7 @@ function App() {
             Gecmis saat
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
           <Box
             sx={{
               background: "#FFB347",
@@ -32,7 +32,7 @@ function App() {
             Su anki saat
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
           <Box
             sx={{
               background: "#4CAF50",

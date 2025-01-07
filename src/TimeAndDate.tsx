@@ -27,7 +27,7 @@ const TimeAndDate: React.FC = () => {
         .toFormat("HH:mm:ss");
       setCurrentTime(timeInTurkey);
 
-      const lunarDate = moment().format("iD iMMMM iYYYY");
+      const lunarDate = moment().format("iD iMMMM");
       setIslamicDate(lunarDate);
     }, 1000);
 
