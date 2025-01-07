@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import moment from "moment-hijri";
-import {
-  Select,
-  MenuItem,
-  Box,
-  Typography,
-  SelectChangeEvent,
-} from "@mui/material";
+import { Box, Typography, SelectChangeEvent } from "@mui/material";
 
 type TimeAndDateProps = {
   onDateChange: (selectedDate: string) => void;
@@ -20,7 +14,8 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
     moment().format("iD") // Default to the current Islamic day
   );
   const currentIslamicDay = parseInt(moment().format("iD"), 10); // Current Islamic day as a number
-
+  console.log(islamicDate);
+  console.log(currentIslamicDay);
   useEffect(() => {
     moment.locale("en");
 
@@ -43,10 +38,6 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
 
     return () => clearInterval(interval);
   }, [selectedDay, onDateChange]);
-
-  const handleDateChange = (event: SelectChangeEvent) => {
-    setSelectedDay(event.target.value); // Update the selected day
-  };
 
   return (
     <Box
