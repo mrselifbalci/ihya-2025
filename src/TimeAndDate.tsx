@@ -14,8 +14,7 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
     moment().format("iD") // Default to the current Islamic day
   );
   const currentIslamicDay = parseInt(moment().format("iD"), 10); // Current Islamic day as a number
-  console.log(islamicDate);
-  console.log(currentIslamicDay);
+
   useEffect(() => {
     moment.locale("en");
 
@@ -40,6 +39,8 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
   }, [selectedDay, onDateChange]);
   useEffect(() => {
     setSelectedDay(moment().format("iD"));
+    console.log(islamicDate);
+    console.log(currentIslamicDay);
   }, []);
 
   return (
@@ -62,7 +63,7 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
         <Typography variant="h5">8 Rajab</Typography>
       </Box>
       <Box sx={{ mt: 2 }}>
-        <Typography variant="body1">Tarihi değiştir:</Typography>
+        {/* <Typography variant="body1">Tarihi değiştir:</Typography> */}
         {/* <Select
           value={selectedDay}
           onChange={handleDateChange}
