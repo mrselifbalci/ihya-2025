@@ -78,7 +78,7 @@ const TimeGrid: React.FC = () => {
 
   // Determine tile color
   const getTileColor = (hour: number): string => {
-    if (hour < currentHour) return "#F5A3A3"; // Red for past hours
+    if (hour < currentHour) return "#E57373"; // Red for past hours
     if (hour === currentHour) return "#FFB347"; // Orange for the current hour
     return "#4CAF50"; // Green for future hours
   };
@@ -119,7 +119,7 @@ const TimeGrid: React.FC = () => {
                   <Grid item xs={12} key={i}>
                     {isCurrentHour || isPastHour ? (
                       <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <span style={{ minWidth: "20%" }}>
+                        <span style={{ minWidth: "50%" }}>
                           {nameStatus.name}
                         </span>
                         <Checkbox

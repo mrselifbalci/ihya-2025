@@ -45,8 +45,8 @@ const TimeAndDate: React.FC = () => {
         fontSize: "24px",
         display: "flex",
         justifyContent: "space-between",
-        paddingLeft: "50px",
-        paddingRight: "50px",
+        paddingLeft: "10px",
+        paddingRight: "10px",
       }}
     >
       <div>
@@ -54,7 +54,7 @@ const TimeAndDate: React.FC = () => {
         <h3 style={{ marginLeft: "20px" }}>{currentTime}</h3>
       </div>
       <div>
-        <h2>Hicri Takvim Tarihi</h2>
+        <h2>Hicri Tarih</h2>
         <div>{islamicDate}</div>
       </div>
     </div>
