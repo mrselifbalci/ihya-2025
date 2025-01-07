@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import moment from "moment-hijri";
-import { Box, Typography, SelectChangeEvent } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 type TimeAndDateProps = {
   onDateChange: (selectedDate: string) => void;
@@ -38,7 +38,7 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
 
     return () => clearInterval(interval);
   }, [selectedDay, onDateChange]);
-
+  console.log(setSelectedDay);
   return (
     <Box
       sx={{
