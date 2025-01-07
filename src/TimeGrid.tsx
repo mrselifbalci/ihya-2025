@@ -25,11 +25,14 @@ const TimeGrid: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/date/${today}`);
+        const response = await fetch(
+          `https://ihya-2025-be0afcce5189.herokuapp.com/date/${today}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
+        console.log(result);
         setData(result.data); // Update the state with fetched data
       } catch (error) {
         console.error("Error fetching data:", error);
