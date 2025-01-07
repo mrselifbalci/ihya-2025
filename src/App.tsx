@@ -1,13 +1,20 @@
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import "./App.css";
 import TimeAndDate from "./TimeAndDate";
 import TimeGrid from "./TimeGrid";
 
-function App() {
+const App: React.FC = () => {
+  const [selectedIslamicDate, setSelectedIslamicDate] = useState<string>("");
+
+  const handleDateChange = (date: string) => {
+    setSelectedIslamicDate(date);
+  };
+
   return (
     <>
-      <TimeAndDate />
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <TimeAndDate onDateChange={handleDateChange} />
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
           <Box
             sx={{
@@ -17,7 +24,7 @@ function App() {
             }}
           ></Box>
           <Typography variant="body2" sx={{ ml: "5px" }}>
-            Gecmis saat
+            Geçmiş saat
           </Typography>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
@@ -29,7 +36,7 @@ function App() {
             }}
           ></Box>
           <Typography variant="body2" sx={{ ml: "5px" }}>
-            Su anki saat
+            Şu anki saat
           </Typography>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
@@ -45,16 +52,16 @@ function App() {
           </Typography>
         </Box>
       </Box>
-      <Typography variant="body1">
+      <Typography variant="body1" sx={{ mb: 2 }}>
         İtikafa başladığınız saatte isminizin yanındaki kutuya tik atmayı
         unutmayınız. Kutucuklar sadece kendi saatlerinde aktif olacaktır.
         Önceden ya da saat geçtikten sonra değişiklik yapılmamaktadır. Eskiye
         dönük değişiklik yapmak isterseniz WhatsApp'tan yazabilirsiniz.
         Teşekkürler.
       </Typography>
-      <TimeGrid />
+      <TimeGrid selectedIslamicDate={selectedIslamicDate} />
     </>
   );
-}
+};
 
 export default App;

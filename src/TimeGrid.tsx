@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import Grid from "@mui/material/Grid";
-import { Box, Checkbox } from "@mui/material";
+import { Box, Checkbox, Typography } from "@mui/material";
 
 type NameStatus = {
   name: string;
@@ -13,7 +13,9 @@ type HourData = {
   names: NameStatus[]; // Array of names with their status
 };
 
-const TimeGrid: React.FC = () => {
+const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
+  selectedIslamicDate,
+}) => {
   const [data, setData] = useState<HourData[]>([]); // State to hold grid data
   const [currentHour, setCurrentHour] = useState<number>(
     DateTime.now().setZone("Asia/Istanbul").hour
@@ -21,12 +23,12 @@ const TimeGrid: React.FC = () => {
 
   // Fetch data from backend
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    if (!selectedIslamicDate) return; // Ensure we have a valid date before fetching
 
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://ihya-2025-be0afcce5189.herokuapp.com/date/${today}`
+          `https://ihya-2025-be0afcce5189.herokuapp.com/date/${selectedIslamicDate}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -46,7 +48,7 @@ const TimeGrid: React.FC = () => {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedIslamicDate]); // Dependency includes selectedIslamicDate
 
   // Update status on the backend
   const updateStatus = async (hour: string, name: string, status: boolean) => {
@@ -79,11 +81,17 @@ const TimeGrid: React.FC = () => {
   // Determine tile color
   const getTileColor = (hour: number): string => {
     if (hour < currentHour) return "#E57373"; // Red for past hours
-    if (hour === currentHour) return "#4CAF50"; // Orange for the current hour
-    return "grey"; // Green for future hours
+    if (hour === currentHour) return "#4CAF50"; // Green for the current hour
+    return "grey"; // Grey for future hours
   };
 
-  return (
+  return data?.length === 0 || data === undefined ? (
+    <Box sx={{ height: "200px", background: "white" }}>
+      <Typography variant="h6" align="center" sx={{ mt: 4, color: "grey" }}>
+        Ileri tarihler icin isim listesi henuz hazir degil.
+      </Typography>
+    </Box>
+  ) : (
     <Grid container spacing={2} style={{ padding: "20px" }}>
       {data?.map((hourData, index) => {
         const hour = parseInt(hourData.hour.split(":")[0], 10);
