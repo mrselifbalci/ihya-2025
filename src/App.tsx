@@ -23,7 +23,7 @@ function App() {
         <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
           <Box
             sx={{
-              background: "#FFB347",
+              background: "#4CAF50",
               width: "10px",
               height: "10px",
             }}
@@ -35,7 +35,7 @@ function App() {
         <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
           <Box
             sx={{
-              background: "#4CAF50",
+              background: "grey",
               width: "10px",
               height: "10px",
             }}

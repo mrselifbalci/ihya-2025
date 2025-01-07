@@ -79,8 +79,8 @@ const TimeGrid: React.FC = () => {
   // Determine tile color
   const getTileColor = (hour: number): string => {
     if (hour < currentHour) return "#E57373"; // Red for past hours
-    if (hour === currentHour) return "#FFB347"; // Orange for the current hour
-    return "#4CAF50"; // Green for future hours
+    if (hour === currentHour) return "#4CAF50"; // Orange for the current hour
+    return "grey"; // Green for future hours
   };
 
   return (
