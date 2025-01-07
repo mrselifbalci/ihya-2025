@@ -38,6 +38,9 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
 
     return () => clearInterval(interval);
   }, [selectedDay, onDateChange]);
+  useEffect(() => {
+    setSelectedDay(moment().format("iD"));
+  }, []);
 
   return (
     <Box
