@@ -50,8 +50,14 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
     return () => clearInterval(interval);
   }, [selectedIslamicDate]); // Dependency includes selectedIslamicDate
 
+  // Get the current Islamic date in Turkey
+  const currentIslamicDate = DateTime.now()
+    .setZone("Asia/Istanbul")
+    .toFormat("yyyy-MM-dd");
+
   // Update status on the backend
   const updateStatus = async (hour: string, name: string, status: boolean) => {
+    console.log(hour, name, status);
     try {
       const response = await fetch(
         `https://ihya-2025-be0afcce5189.herokuapp.com/date/update`,
@@ -80,9 +86,28 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
 
   // Determine tile color
   const getTileColor = (hour: number): string => {
+    if (selectedIslamicDate < currentIslamicDate) {
+      // Selected date is in the past
+      return "#E57373"; // Red for all hours
+    }
+
+    if (selectedIslamicDate > currentIslamicDate) {
+      // Selected date is in the future
+      return "grey"; // Grey for all hours
+    }
+
+    // Selected date is today, check the time
     if (hour < currentHour) return "#E57373"; // Red for past hours
     if (hour === currentHour) return "#4CAF50"; // Green for the current hour
     return "grey"; // Grey for future hours
+  };
+
+  // Determine if editing is allowed
+  const canEdit = (hour: number): boolean => {
+    return (
+      selectedIslamicDate === currentIslamicDate && // Date must match
+      hour === currentHour // Hour must match
+    );
   };
 
   return data?.length === 0 || data === undefined ? (
@@ -96,8 +121,7 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
       {data?.map((hourData, index) => {
         const hour = parseInt(hourData.hour.split(":")[0], 10);
         const color = getTileColor(hour);
-        const isCurrentHour = hour === currentHour;
-        const isPastHour = hour < currentHour;
+        const isEditable = canEdit(hour); // Check if editing is allowed
 
         return (
           <Grid
@@ -125,47 +149,41 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
               <Grid container spacing={1} style={{ marginTop: "10px" }}>
                 {hourData.names.map((nameStatus, i) => (
                   <Grid item xs={12} key={i}>
-                    {isCurrentHour || isPastHour ? (
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <span style={{ minWidth: "50%" }}>
-                          {nameStatus.name}
-                        </span>
-                        <Checkbox
-                          checked={nameStatus.status}
-                          disabled={isPastHour} // Disable for past hours
-                          sx={{
-                            marginLeft: "10px",
-                            "&.Mui-checked": {
-                              color: "primary.main", // Material-UI blue
-                            },
-                          }}
-                          onChange={(e) => {
-                            const newStatus = e.target.checked;
-                            updateStatus(
-                              hourData.hour,
-                              nameStatus.name,
-                              newStatus
-                            ); // Call update function
-                            setData((prevData) =>
-                              prevData.map((entry) =>
-                                entry.hour === hourData.hour
-                                  ? {
-                                      ...entry,
-                                      names: entry.names.map((name) =>
-                                        name.name === nameStatus.name
-                                          ? { ...name, status: newStatus }
-                                          : name
-                                      ),
-                                    }
-                                  : entry
-                              )
-                            ); // Update state optimistically
-                          }}
-                        />
-                      </Box>
-                    ) : (
-                      <span>{nameStatus.name}</span> // Display names without checkboxes for future hours
-                    )}
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <span style={{ minWidth: "50%" }}>{nameStatus.name}</span>
+                      <Checkbox
+                        checked={nameStatus.status}
+                        disabled={!isEditable} // Disable if not editable
+                        sx={{
+                          marginLeft: "10px",
+                          "&.Mui-checked": {
+                            color: "primary.main", // Material-UI blue
+                          },
+                        }}
+                        onChange={(e) => {
+                          const newStatus = e.target.checked;
+                          updateStatus(
+                            hourData.hour,
+                            nameStatus.name,
+                            newStatus
+                          ); // Call update function
+                          setData((prevData) =>
+                            prevData.map((entry) =>
+                              entry.hour === hourData.hour
+                                ? {
+                                    ...entry,
+                                    names: entry.names.map((name) =>
+                                      name.name === nameStatus.name
+                                        ? { ...name, status: newStatus }
+                                        : name
+                                    ),
+                                  }
+                                : entry
+                            )
+                          ); // Update state optimistically
+                        }}
+                      />
+                    </Box>
                   </Grid>
                 ))}
               </Grid>

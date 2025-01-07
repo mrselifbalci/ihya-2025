@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { DateTime } from "luxon";
 import moment from "moment-hijri";
-import { Box, Typography } from "@mui/material";
+import momentTimezone from "moment-timezone"; // Import moment-timezone
+import {
+  Select,
+  MenuItem,
+  Box,
+  Typography,
+  SelectChangeEvent,
+} from "@mui/material";
 
 type TimeAndDateProps = {
   onDateChange: (selectedDate: string) => void;
@@ -10,38 +16,50 @@ type TimeAndDateProps = {
 const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
   const [currentTime, setCurrentTime] = useState<string>("");
   const [islamicDate, setIslamicDate] = useState<string>("");
-  const [selectedDay, setSelectedDay] = useState<string>(
-    moment().format("iD") // Default to the current Islamic day
-  );
-  const currentIslamicDay = parseInt(moment().format("iD"), 10); // Current Islamic day as a number
+  const [selectedDay, setSelectedDay] = useState<string>(""); // Selected Islamic day
+  const [currentIslamicDayTurkey, setCurrentIslamicDayTurkey] =
+    useState<number>(0);
 
   useEffect(() => {
     moment.locale("en");
 
     const interval = setInterval(() => {
-      const timeInTurkey = DateTime.now()
-        .setZone("Asia/Istanbul")
-        .toFormat("HH:mm:ss");
+      // Get the current time in Turkey
+      const turkeyDate = momentTimezone().tz("Asia/Istanbul");
+      // console.log(turkeyDate);
+      // Set Turkey's current time
+      const timeInTurkey = turkeyDate.format("HH:mm:ss");
       setCurrentTime(timeInTurkey);
 
-      const adjustedDate = moment()
-        .iDate(parseInt(selectedDay, 10))
-        .format("iD iMMMM");
-      setIslamicDate(adjustedDate);
+      // Calculate the current Islamic day in Turkey
+      const islamicDayInTurkey = parseInt(moment(turkeyDate).format("iD"), 10);
+      setCurrentIslamicDayTurkey(islamicDayInTurkey);
 
-      // Notify parent of the date change
+      // Default `selectedDay` to the current Islamic day in Turkey if not already set
+      if (!selectedDay) {
+        setSelectedDay(islamicDayInTurkey.toString());
+      }
+      // Update the displayed Islamic date in Turkey
+      const hijriDateTurkey = moment(turkeyDate.toDate())
+        .iDate(islamicDayInTurkey)
+        .locale("en")
+        .format("iD iMMMM");
+      setIslamicDate(hijriDateTurkey);
+
+      // Notify the parent component of the selected date change
       onDateChange(
-        moment().iDate(parseInt(selectedDay, 10)).format("YYYY-MM-DD")
+        moment(turkeyDate.toDate())
+          .iDate(parseInt(selectedDay || islamicDayInTurkey.toString(), 10))
+          .format("YYYY-MM-DD")
       );
     }, 1000);
 
     return () => clearInterval(interval);
   }, [selectedDay, onDateChange]);
-  useEffect(() => {
-    setSelectedDay(moment().format("iD"));
-    console.log(islamicDate);
-    console.log(currentIslamicDay);
-  }, []);
+
+  const handleDateChange = (event: SelectChangeEvent) => {
+    setSelectedDay(event.target.value); // Update the selected day
+  };
 
   return (
     <Box
@@ -60,11 +78,11 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
       </Box>
       <Box sx={{ mt: 2 }}>
         <Typography variant="h6">Hicri Tarih</Typography>
-        <Typography variant="h5">8 Rajab</Typography>
+        <Typography variant="h5">{islamicDate}</Typography>
       </Box>
       <Box sx={{ mt: 2 }}>
-        {/* <Typography variant="body1">Tarihi değiştir:</Typography> */}
-        {/* <Select
+        <Typography variant="body1">Tarihi değiştir:</Typography>
+        <Select
           value={selectedDay}
           onChange={handleDateChange}
           sx={{
@@ -93,23 +111,23 @@ const TimeAndDate: React.FC<TimeAndDateProps> = ({ onDateChange }) => {
             },
           }}
         >
-          {Array.from({ length: 24 }, (_, i) => i + 7).map((day) => (
+          {Array.from({ length: 30 }, (_, i) => i + 7).map((day) => (
             <MenuItem
               key={day}
               value={day.toString()}
-              disabled={day > currentIslamicDay} // Disable future days
+              disabled={day > currentIslamicDayTurkey} // Disable future days based on Turkey's Islamic day
               sx={{
                 backgroundColor: "black", // Background color for each item
                 "&:hover": {
                   backgroundColor: "grey", // Background color on hover
                 },
-                color: day > currentIslamicDay ? "grey" : "white", // Grey out future dates
+                color: day > currentIslamicDayTurkey ? "grey" : "white", // Grey out future dates
               }}
             >
               {day}
             </MenuItem>
           ))}
-        </Select> */}
+        </Select>
       </Box>
     </Box>
   );
