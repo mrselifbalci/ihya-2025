@@ -32,7 +32,6 @@ const TimeGrid: React.FC = () => {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
-        console.log(result);
         setData(result.data); // Update the state with fetched data
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,6 +47,34 @@ const TimeGrid: React.FC = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Update status on the backend
+  const updateStatus = async (hour: string, name: string, status: boolean) => {
+    try {
+      const response = await fetch(
+        `https://ihya-2025-be0afcce5189.herokuapp.com/date/update`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            hour,
+            name,
+            status,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+
+      console.log(`Updated ${name} at ${hour} to status: ${status}`);
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
 
   // Determine tile color
   const getTileColor = (hour: number): string => {
@@ -105,9 +132,26 @@ const TimeGrid: React.FC = () => {
                             },
                           }}
                           onChange={(e) => {
-                            console.log(
-                              `${nameStatus.name} checked: ${e.target.checked}`
-                            );
+                            const newStatus = e.target.checked;
+                            updateStatus(
+                              hourData.hour,
+                              nameStatus.name,
+                              newStatus
+                            ); // Call update function
+                            setData((prevData) =>
+                              prevData.map((entry) =>
+                                entry.hour === hourData.hour
+                                  ? {
+                                      ...entry,
+                                      names: entry.names.map((name) =>
+                                        name.name === nameStatus.name
+                                          ? { ...name, status: newStatus }
+                                          : name
+                                      ),
+                                    }
+                                  : entry
+                              )
+                            ); // Update state optimistically
                           }}
                         />
                       </Box>
