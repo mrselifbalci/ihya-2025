@@ -33,7 +33,7 @@ const GunlukSureler: React.FC = () => {
   const [list, setList] = useState<Sura[]>([]);
   const [groupedSuras, setGroupedSuras] = useState<GroupedSuras>({});
   const [editingInputs, setEditingInputs] = useState<EditingInputs>({});
-
+  console.log(list);
   useEffect(() => {
     const fetchData = async () => {
       try {
