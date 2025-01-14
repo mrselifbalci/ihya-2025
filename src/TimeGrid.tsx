@@ -28,7 +28,7 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://ihya-2025-be0afcce5189.herokuapp.com/date/${selectedIslamicDate}`
+          `http://localhost:5001/date/${selectedIslamicDate}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -59,20 +59,17 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
   const updateStatus = async (hour: string, name: string, status: boolean) => {
     console.log(hour, name, status);
     try {
-      const response = await fetch(
-        `https://ihya-2025-be0afcce5189.herokuapp.com/date/update`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            hour,
-            name,
-            status,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:5001/date/update`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          hour,
+          name,
+          status,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update status");
