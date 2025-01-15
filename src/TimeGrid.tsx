@@ -28,7 +28,7 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/date/${selectedIslamicDate}`
+          `https://ihya-2025-be0afcce5189.herokuapp.com/date/${selectedIslamicDate}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");

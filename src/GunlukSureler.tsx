@@ -37,7 +37,9 @@ const GunlukSureler: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/suras`);
+        const response = await fetch(
+          `https://ihya-2025-be0afcce5189.herokuapp.com/suras`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -106,7 +108,9 @@ const GunlukSureler: React.FC = () => {
     if (!name) return;
 
     axios
-      .patch(`http://localhost:5001/suras/${suraId}`, { personName: name })
+      .patch(`https://ihya-2025-be0afcce5189.herokuapp.com/suras/${suraId}`, {
+        personName: name,
+      })
       .then(() => {
         // Reset input value after submission
         setEditingInputs((prev) => ({
