@@ -114,12 +114,12 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
   };
 
   // Determine if editing is allowed
-  const canEdit = (hour: number): boolean => {
-    return (
-      selectedIslamicDate === currentIslamicDate && // Date must match
-      hour === currentHour // Hour must match
-    );
-  };
+  // const canEdit = (hour: number): boolean => {
+  //   return (
+  //     selectedIslamicDate === currentIslamicDate && // Date must match
+  //     hour === currentHour // Hour must match
+  //   );
+  // };
 
   return data?.length === 0 || data === undefined ? (
     <Box sx={{ height: "200px", background: "white" }}>
