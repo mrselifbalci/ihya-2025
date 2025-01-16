@@ -132,7 +132,7 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
       {data?.map((hourData, index) => {
         const hour = parseInt(hourData.hour.split(":")[0], 10);
         const color = getTileColor(hour);
-        const isEditable = canEdit(hour); // Check if editing is allowed
+        // const isEditable = canEdit(hour); // Check if editing is allowed
 
         return (
           <Grid
