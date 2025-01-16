@@ -6,11 +6,13 @@ import { Box, Checkbox, Typography } from "@mui/material";
 type NameStatus = {
   name: string;
   status: boolean;
+  _id: string;
 };
 
 type HourData = {
   hour: string; // Example: "00:00"
   names: NameStatus[]; // Array of names with their status
+  _id: string;
 };
 
 const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
@@ -56,20 +58,32 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
     .toFormat("yyyy-MM-dd");
 
   // Update status on the backend
-  const updateStatus = async (hour: string, name: string, status: boolean) => {
-    console.log(hour, name, status);
+  const updateStatus = async (
+    hour: string,
+    name: string,
+    status: boolean,
+    id: string
+  ) => {
+    console.log(hour, name, status, id);
+    const selectedData = data.find((item) => item._id === id);
+    const updatedData = {
+      ...selectedData,
+      names: selectedData?.names.map((item) =>
+        item.name === name ? { ...item, status: status } : item
+      ),
+    };
+
     try {
-      const response = await fetch(`http://localhost:5001/date/update`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          hour,
-          name,
-          status,
-        }),
-      });
+      const response = await fetch(
+        `https://ihya-2025-be0afcce5189.herokuapp.com/date/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData), // Send the updated data directly
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update status");
@@ -147,10 +161,12 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
                 {hourData.names.map((nameStatus, i) => (
                   <Grid item xs={12} key={i}>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <span style={{ minWidth: "50%" }}>{nameStatus.name}</span>
+                      <span style={{ minWidth: "50%" }}>
+                        {nameStatus?.name}
+                      </span>
                       <Checkbox
-                        checked={nameStatus.status}
-                        disabled={!isEditable} // Disable if not editable
+                        checked={nameStatus?.status}
+                        // disabled={!isEditable} // Disable if not editable
                         sx={{
                           marginLeft: "10px",
                           "&.Mui-checked": {
@@ -162,7 +178,8 @@ const TimeGrid: React.FC<{ selectedIslamicDate: string }> = ({
                           updateStatus(
                             hourData.hour,
                             nameStatus.name,
-                            newStatus
+                            newStatus,
+                            hourData._id
                           ); // Call update function
                           setData((prevData) =>
                             prevData.map((entry) =>
